@@ -1,5 +1,5 @@
 # DB
-`docker run -p 127.0.0.1:27017:27017 mongo`
+`docker run -p 127.0.0.1:27017:27017 -v /Users/jkent/mongo-data:/data/db mongo`
 
 # React + Vite
 

@@ -1,5 +1,7 @@
 import * as mongoose from 'mongoose';
+
 import { CardModel } from './card.js';
+import { ImageModel } from './image.js';
 
 const conn = null;
 
@@ -14,18 +16,45 @@ export const getCards = async () => {
   return CardModel.find();
 }
 
+export const saveImage = async (data) => {
+  await init();
+
+  const image = new ImageModel({
+    filename: data.originalname,
+    encoding: data.encoding,
+    mimetype: data.mimetype,
+    size: data.size,
+    content: data.buffer,
+  })
+  await image.save();
+
+  return image;
+}
+
+export const getImage = async (id) => {
+  await init();
+
+  const image = await ImageModel.findById(id)
+  return image;
+}
+
 export const makeCard = async (data) => {
   await init();
+
   data.tags = data.tagString.split(" ").filter(str => str.length > 0)
+
   const card = new CardModel(data);
   await card.save();
-  console.log("saved")
+
   return card._id;
 }
 
 export const getCard = async id => {
   await init();
-  return CardModel.find({ id });
+
+  const card = await CardModel.findById(id);
+  
+  return card;
 }
 
 export const findCard = async term => {

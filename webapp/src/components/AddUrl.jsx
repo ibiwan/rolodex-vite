@@ -1,6 +1,8 @@
 import { useId } from 'react'
 import { ErrorMessage, Field, Form, Formik } from 'formik';
-import { makeCard } from '../services/api';
+import { makeCard } from '../services/api.js';
+import { ThreeCol } from './ThreeCol.jsx';
+import { FormItem } from './FormItem.jsx';
 
 export const AddUrl = ({ refreshNames }) => {
   const nameId = useId();
@@ -8,13 +10,17 @@ export const AddUrl = ({ refreshNames }) => {
   const tagId = useId();
 
   return <Formik
-    initialValues={{ name: '', url: '', tagString: '' }}
+    initialValues={{
+      name: '',
+      url: '',
+      tagString: '',
+    }}
+
     onSubmit={async (data) => {
-      console.log({ data });
-      const result = await makeCard(data);
-      console.log({ result });
+      await makeCard(data);
       refreshNames();
     }}
+
     validate={values => {
       const errors = {};
       if (values.name === '') { errors.name = 'Name must be set' }
@@ -24,31 +30,29 @@ export const AddUrl = ({ refreshNames }) => {
   >
     {() =>
       <Form>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'auto auto auto'
-        }}>
-          <label htmlFor={nameId}>Name:</label>
-          <Field id={nameId} name="name" />
-          <span style={{ color: 'red' }} >
-            <ErrorMessage name='name' />
-          </span>
+        <ThreeCol>
+          <FormItem {...{
+            id: nameId,
+            name: "name",
+            label: "Name",
+          }} />
 
-          <label htmlFor={urlId}>URL:</label>
-          <Field id={urlId} name="url" />
-          <span style={{ color: 'red' }} >
-            <ErrorMessage name='url' />
-          </span>
+          <FormItem {...{
+            id: urlId,
+            name: "url",
+            label: "URL",
+          }} />
 
-          <label htmlFor={tagId}>Tags:</label>
-          <Field id={tagId} name="tagString" />
-          <span />
+          <FormItem {...{
+            id: tagId,
+            name: "tagString",
+            label: "Tags",
+          }} />
 
-          <span />
+          <span></span>
           <button type="submit">Add URL</button>
-          <span />
-        </div>
-
+          <span></span>
+        </ThreeCol>
       </Form>
     }
   </Formik>

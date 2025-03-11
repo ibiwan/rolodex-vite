@@ -1,22 +1,32 @@
 import express from 'express';
-import { getCards, makeCard } from './db/mongoose.js';
 import multer from 'multer';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 
-const uploadMw = multer({});
+import { getCard, getCards, getImage, makeCard, saveImage } from './db/mongoose.js';
 
 const port = 3000;
 
 const app = express()
+const uploadMw = multer({});
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 app.use(cors())
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
+app.get('/image/:id', async (req, res) => {
+  const image = await getImage(req.params.id);
+  res.set({
+    'Content-Type': image.mimetype,
+    'Content-Disposition': `attachment; filename="${image.filename}"`
+  });
+  res.send(image.content);
+})
+
+app.get('/card/:id', async (req, res) => {
+  const card = await getCard(req.params.id);
+  res.send(card)
 })
 
 app.get('/cardNames', async (req, res) => {
@@ -28,18 +38,19 @@ app.get('/cardNames', async (req, res) => {
   res.send(projected);
 })
 
-app.post('/card', async (req, res) => {
-  console.log({ body: req.body })
+app.post('/card', uploadMw.single('image'), async (req, res) => {
+  let image = null;
+  if (req.file) {
+    image = await saveImage(req.file)
+  }
+
   const { name, url, tagString } = req.body;
-  const card = { name, url, tagString };
+  const card = { name, url, tagString, image };
   await makeCard(card)
+
   res.send({ success: true })
 })
 
-app.post('/image', uploadMw.single('image'), (req, res) => {
-
-})
-
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Rolodex Server app listening on port ${port}`)
 })
