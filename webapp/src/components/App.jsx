@@ -2,21 +2,18 @@ import { useEffect, useState } from 'react'
 
 import { getCardNames } from '../services/api.js'
 
-import { AddUrl } from './AddUrl.jsx'
-import { AddImage } from './AddImage.jsx'
 import { Box } from './Box.jsx'
 import { Card } from './Card.jsx'
 
 import './App.css'
+import { AddCard } from './AddCard.jsx'
 
 function App() {
   const [cardNames, setCardNames] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
 
   const refreshNames = async () => {
-    console.log('getting names...');
     const response = await getCardNames();
-    console.log({ response })
     setCardNames(response);
   }
 
@@ -24,14 +21,23 @@ function App() {
     refreshNames();
   }, [])
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if(event.key === 'Escape'){
+        setSelectedId(null);
+      }
+    };
+
+    document.body.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   return (
     <>
       <Box>
-        <AddImage refreshNames={refreshNames} />
-      </Box>
-
-      <Box>
-        <AddUrl refreshNames={refreshNames} />
+        <AddCard refreshNames={refreshNames} />
       </Box>
 
       <Box>
@@ -40,7 +46,7 @@ function App() {
 
       <Box>
         {cardNames.map(({ name, _id }) => {
-          return <div id={_id} onClick={() => setSelectedId(_id)}>{name}</div>
+          return <div key={_id} id={_id} onClick={() => setSelectedId(_id)}>{name}</div>
         })}
       </Box>
     </>

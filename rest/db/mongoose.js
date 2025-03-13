@@ -41,7 +41,8 @@ export const getImage = async (id) => {
 export const makeCard = async (data) => {
   await init();
 
-  data.tags = data.tagString.split(" ").filter(str => str.length > 0)
+  console.log({data});
+  data.tags = (data?.tagString ?? '').split(" ").filter(str => str.length > 0)
 
   const card = new CardModel(data);
   await card.save();
@@ -53,7 +54,7 @@ export const getCard = async id => {
   await init();
 
   const card = await CardModel.findById(id);
-  
+
   return card;
 }
 
