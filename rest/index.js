@@ -44,8 +44,8 @@ app.post('/card', uploadMw.single('image'), async (req, res) => {
     image = await saveImage(req.file)
   }
 
-  const { name, url, tagString } = req.body;
-  const card = { name, url, tagString, image };
+  const { name, url, tagString, text } = req.body;
+  const card = { name, url, tagString, image, text };
   await makeCard(card)
 
   res.send({ success: true })

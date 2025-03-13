@@ -4,15 +4,13 @@ import { useId } from 'react';
 export const FormItem = ({
   name,
   label,
-  component=null
+  component = null
 }) => {
   const id = 'name' + useId();
 
   return (<>
     <label htmlFor={id}>{label}:</label>
-    {component || 
-      <Field id={id} name={name} />
-    }
+    <Field id={id} name={name} component={component || 'input'} />
     <span style={{ color: 'red' }} >
       <ErrorMessage name={name} />
     </span>

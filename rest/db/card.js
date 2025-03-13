@@ -5,6 +5,7 @@ export const cardSchema = {
   name: String,
   tags: [{ type: String }],
   url: String,
+  text: String,
   image: {type: mongoose.Types.ObjectId, ref: "Image"}
 };
 

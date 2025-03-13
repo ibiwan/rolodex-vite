@@ -35,15 +35,20 @@ export const AddCard = ({ refreshNames }) => {
 
       switch (data[Fields.type]) {
         case Types.url:
+          console.log("url")
           fd.append(Fields.url, data[Fields.url]);
           break;
         case Types.image:
+          console.log("image")
           fd.append(Fields.image, data[Fields.image]);
           break;
         case Types.text:
+          console.log("text")
           fd.append(Fields.text, data[Fields.text]);
           break;
       }
+
+      console.log({ data, keys: fd.keys().toArray() })
 
       await makeCard(fd);
       refreshNames();
@@ -54,6 +59,8 @@ export const AddCard = ({ refreshNames }) => {
       if (values.name === '') {
         errors.name = 'Name must be set';
       }
+
+      console.log({ values })
 
       switch (values[Fields.type]) {
         case Types.url:
@@ -102,7 +109,8 @@ export const AddCard = ({ refreshNames }) => {
             <FormItem name={Types.url} label='URL' />
           }
           {values.type === Types.text &&
-            <FormItem name={Types.text} label='Text Block' component={<textarea />} />
+            <FormItem name={Types.text} label='Text Block'
+              component='textarea' />
           }
           {values.type === Types.image &&
             <FormItem name={Types.image} label='Image File'

@@ -11,59 +11,36 @@ const init = async () => {
   }
 }
 
-export const getCards = async () => {
-  await init();
-  return CardModel.find();
-}
+const withInit = f => async (...a) => { await init(); return f(...a) };
 
-export const saveImage = async (data) => {
-  await init();
+export const getCards = withInit(() => CardModel.find());
+export const getCard = withInit(async id => CardModel.findById(id));
+export const getImage = withInit(async (id) => ImageModel.findById(id));
 
+export const saveImage = withInit(async (data) => {
+  const { originalname, encoding, mimetype, size, buffer } = data;
   const image = new ImageModel({
-    filename: data.originalname,
-    encoding: data.encoding,
-    mimetype: data.mimetype,
-    size: data.size,
-    content: data.buffer,
+    filename: originalname,
+    content: buffer,
+    encoding, mimetype, size,
   })
-  await image.save();
+  return image.save();
+});
 
-  return image;
-}
-
-export const getImage = async (id) => {
-  await init();
-
-  const image = await ImageModel.findById(id)
-  return image;
-}
-
-export const makeCard = async (data) => {
-  await init();
-
-  console.log({data});
+export const makeCard = withInit(async (data) => {
   data.tags = (data?.tagString ?? '').split(" ").filter(str => str.length > 0)
-
+  console.log('makeCard', { data })
   const card = new CardModel(data);
   await card.save();
 
   return card._id;
-}
+});
 
-export const getCard = async id => {
-  await init();
-
-  const card = await CardModel.findById(id);
-
-  return card;
-}
-
-export const findCard = async term => {
-  await init();
-  return CardModel.find({
+export const findCard = withInit(async term =>
+  CardModel.find({
     $or: [
       { name: { $regex: `/${term}/` } },
       { tags: term },
     ]
-  });
-}
+  })
+);
