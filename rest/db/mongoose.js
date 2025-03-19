@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import imageThumbnail from 'image-thumbnail';
 
 import { CardModel } from './card.js';
 import { ImageModel } from './image.js';
@@ -19,17 +20,18 @@ export const getImage = withInit(async (id) => ImageModel.findById(id));
 
 export const saveImage = withInit(async (data) => {
   const { originalname, encoding, mimetype, size, buffer } = data;
+  const thumb = await imageThumbnail(buffer);
   const image = new ImageModel({
     filename: originalname,
     content: buffer,
-    encoding, mimetype, size,
+    encoding, mimetype, size, thumb
   })
   return image.save();
 });
 
 export const makeCard = withInit(async (data) => {
   data.tags = (data?.tagString ?? '').split(" ").filter(str => str.length > 0)
-  console.log('makeCard', { data })
+  // console.log('makeCard', { data })
   const card = new CardModel(data);
   await card.save();
 

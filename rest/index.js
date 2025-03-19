@@ -34,6 +34,7 @@ app.get('/cardNames', async (req, res) => {
   const projected = result.map((card) => ({
     _id: card._id.toString(),
     name: card.name,
+    thumb: card.thumb,
   }))
   res.send(projected);
 })

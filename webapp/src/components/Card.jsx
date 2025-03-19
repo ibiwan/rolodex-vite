@@ -17,7 +17,7 @@ export const Card = ({ _id }) => {
     else fetchCardWithId(_id)
   }, [_id]);
 
-  console.log({ cardData });
+  // console.log({ cardData });
 
   if (cardData === null) { return <></>; }
 

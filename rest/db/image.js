@@ -6,6 +6,7 @@ export const imageSchema = {
   mimetype: String,
   size: Number,
   content: Buffer,
+  thumb: Buffer,
 };
 
 export const ImageModel = mongoose.model('Image', imageSchema);

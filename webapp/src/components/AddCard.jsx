@@ -35,20 +35,20 @@ export const AddCard = ({ refreshNames }) => {
 
       switch (data[Fields.type]) {
         case Types.url:
-          console.log("url")
+          // console.log("url")
           fd.append(Fields.url, data[Fields.url]);
           break;
         case Types.image:
-          console.log("image")
+          // console.log("image")
           fd.append(Fields.image, data[Fields.image]);
           break;
         case Types.text:
-          console.log("text")
+          // console.log("text")
           fd.append(Fields.text, data[Fields.text]);
           break;
       }
 
-      console.log({ data, keys: fd.keys().toArray() })
+      // console.log({ data, keys: fd.keys().toArray() })
 
       await makeCard(fd);
       refreshNames();
@@ -60,7 +60,7 @@ export const AddCard = ({ refreshNames }) => {
         errors.name = 'Name must be set';
       }
 
-      console.log({ values })
+      // console.log({ values })
 
       switch (values[Fields.type]) {
         case Types.url:
@@ -82,7 +82,7 @@ export const AddCard = ({ refreshNames }) => {
       return errors;
     }}
   >
-    {({ setFieldValue, values }) =>
+    {(props) =>
       <Form>
         <ThreeCol>
           <FormItem name={Fields.name} label='Name' />
@@ -105,14 +105,16 @@ export const AddCard = ({ refreshNames }) => {
           </span>
           <span></span>
 
-          {values.type === Types.url &&
-            <FormItem name={Types.url} label='URL' />
+          {props.values.type === Types.url &&
+            <FormItem name={Types.url} label='URL' {...props} />
           }
-          {values.type === Types.text &&
+          {props.values.type === Types.text &&
             <FormItem name={Types.text} label='Text Block'
-              component='textarea' />
+              component='textarea'
+              {...props}
+            />
           }
-          {values.type === Types.image &&
+          {props.values.type === Types.image &&
             <FormItem name={Types.image} label='Image File'
               component={
                 <input
@@ -120,9 +122,10 @@ export const AddCard = ({ refreshNames }) => {
                   accept="image/*"
                   onChange={(e) => {
                     if (e.currentTarget.files) {
-                      setFieldValue(Fields.image, e.currentTarget.files[0]);
+                      props.setFieldValue(Fields.image, e.currentTarget.files[0]);
                     }
-                  }} />
+                  }}
+                  {...props} />
               }
             />
           }
