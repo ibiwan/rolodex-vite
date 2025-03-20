@@ -9,11 +9,9 @@ export const FormItem = ({
 }) => {
   const id = 'name' + useId();
 
-  // console.log({props})
-
   if (component === 'textarea') {
     component = <Field {...props} id={id} name={name}>
-      {(field, form, meta) => <textarea value={field.value} onChange={field.onChange} />}
+      {(field) => <textarea value={field.value} onChange={field.onChange} />}
     </Field>
   }
 

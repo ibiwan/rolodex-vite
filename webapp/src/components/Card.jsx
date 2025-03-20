@@ -1,25 +1,11 @@
-import { useEffect, useState } from 'react'
-import { getCardById } from '../services/api.js';
 import { Box } from './Box.jsx';
+import { useSelector } from 'react-redux';
+import { selectSelectedCard } from '../store/store.js';
 
-export const Card = ({ _id }) => {
-  const [cardData, setCardData] = useState(null);
+export const Card = () => {
+  const cardData = useSelector(selectSelectedCard);
 
-  const fetchCardWithId = async (id) => {
-    const data = await getCardById(id)
-    setCardData(data);
-  }
-
-  useEffect(() => {
-    if (_id === null) {
-      setCardData(null);
-    }
-    else fetchCardWithId(_id)
-  }, [_id]);
-
-  // console.log({ cardData });
-
-  if (cardData === null) { return <></>; }
+  if (!cardData) { return <></>; }
 
   const imageUrl = cardData.image ? `http://localhost:3000/image/${cardData.image}` : null;
 

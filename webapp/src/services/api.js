@@ -1,5 +1,4 @@
 export const makeCard = async (formData) => {
-  // console.log('fetching', {formData})
   await fetch('http://localhost:3000/card', {
     method: 'POST',
     body: formData,

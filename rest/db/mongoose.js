@@ -31,7 +31,6 @@ export const saveImage = withInit(async (data) => {
 
 export const makeCard = withInit(async (data) => {
   data.tags = (data?.tagString ?? '').split(" ").filter(str => str.length > 0)
-  // console.log('makeCard', { data })
   const card = new CardModel(data);
   await card.save();
 

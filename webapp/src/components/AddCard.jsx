@@ -2,6 +2,7 @@ import { Field, Form, Formik } from 'formik';
 import { makeCard } from '../services/api.js';
 import { ThreeCol } from './ThreeCol.jsx';
 import { FormItem } from './FormItem.jsx';
+import { useAddCard } from './AddCardHook.js';
 
 const Types = {
   url: 'url',
@@ -16,7 +17,9 @@ const Fields = {
   tagString: 'tagString',
 }
 
-export const AddCard = ({ refreshNames }) => {
+export const AddCard = () => {
+  const { refreshCardNames } = useAddCard();
+
   return <Formik
     initialValues={{
       [Fields.name]: '',
@@ -35,23 +38,18 @@ export const AddCard = ({ refreshNames }) => {
 
       switch (data[Fields.type]) {
         case Types.url:
-          // console.log("url")
           fd.append(Fields.url, data[Fields.url]);
           break;
         case Types.image:
-          // console.log("image")
           fd.append(Fields.image, data[Fields.image]);
           break;
         case Types.text:
-          // console.log("text")
           fd.append(Fields.text, data[Fields.text]);
           break;
       }
 
-      // console.log({ data, keys: fd.keys().toArray() })
-
       await makeCard(fd);
-      refreshNames();
+      refreshCardNames();
     }}
 
     validate={values => {
@@ -59,8 +57,6 @@ export const AddCard = ({ refreshNames }) => {
       if (values.name === '') {
         errors.name = 'Name must be set';
       }
-
-      // console.log({ values })
 
       switch (values[Fields.type]) {
         case Types.url:

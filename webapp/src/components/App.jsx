@@ -1,38 +1,22 @@
-import { useEffect, useState } from 'react'
-
-import { getCardNames } from '../services/api.js'
-
 import { Box } from './Box.jsx'
 import { Card } from './Card.jsx'
-
-import './App.css'
 import { AddCard } from './AddCard.jsx'
 
+import './App.css'
+import { useApp } from './AppHook.js'
+
 function App() {
-  const [cardNames, setCardNames] = useState([]);
-  const [selectedId, setSelectedId] = useState(null);
+  const {
+    cardNames,
+    hoveredCardId,
+    hoveredThumbUrl,
+    selectedId,
 
-  const refreshNames = async () => {
-    const response = await getCardNames();
-    setCardNames(response);
-  }
-
-  useEffect(() => {
-    refreshNames();
-  }, [])
-
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if(event.key === 'Escape'){
-        setSelectedId(null);
-      }
-    };
-
-    document.body.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.body.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
+    refreshNames,
+    setHoveredCardId,
+    clearHoveredCardId,
+    setSelectedId,
+  } = useApp();
 
   return (
     <>
@@ -40,15 +24,27 @@ function App() {
         <AddCard refreshNames={refreshNames} />
       </Box>
 
-      <Box>
-        <Card _id={selectedId} />
-      </Box>
+      {selectedId &&
+        <Box> <Card /> </Box>
+      }
 
-      <Box>
-        {cardNames.map(({ name, _id }) => {
-          return <div key={_id} id={_id} onClick={() => setSelectedId(_id)}>{name}</div>
-        })}
-      </Box>
+      <Box onMouseLeave={() => clearHoveredCardId()} >
+        <div style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
+          {cardNames.map(({ name, _id }) => {
+            return <div
+              key={_id} id={_id}
+              onMouseOver={() => setHoveredCardId(_id)}
+              onClick={() => setSelectedId(_id)}
+            >{name}</div>
+          })}
+
+          {hoveredThumbUrl &&
+            <img
+              onClick={() => setSelectedId(hoveredCardId)}
+              src={hoveredThumbUrl} alt="" />
+          }
+        </div>
+      </Box >
     </>
   )
 }
