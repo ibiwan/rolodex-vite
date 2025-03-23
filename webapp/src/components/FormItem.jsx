@@ -11,7 +11,11 @@ export const FormItem = ({
 
   if (component === 'textarea') {
     component = <Field {...props} id={id} name={name}>
-      {(field) => <textarea value={field.value} onChange={field.onChange} />}
+      {(field) => <textarea name={name} value={field.value} onChange={
+        (evt) => {
+          field.field.onChange(evt)
+        }
+      } />}
     </Field>
   }
 

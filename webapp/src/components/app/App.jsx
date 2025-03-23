@@ -1,11 +1,11 @@
-import { Box } from './Box.jsx'
-import { Card } from './Card.jsx'
-import { AddCard } from './AddCard.jsx'
+import { Box } from '../Box.jsx'
+import { Card } from '../Card.jsx'
+import { AddCard } from '../add-card/AddCard.jsx'
 
 import './App.css'
 import { useApp } from './AppHook.js'
 
-function App() {
+export function App() {
   const {
     cardNames,
     hoveredCardId,
@@ -17,6 +17,11 @@ function App() {
     clearHoveredCardId,
     setSelectedId,
   } = useApp();
+
+  const handleCardSelectClick = (evt) => {
+    setSelectedId(hoveredCardId);
+    evt.stopPropagation();
+  }
 
   return (
     <>
@@ -30,17 +35,19 @@ function App() {
 
       <Box onMouseLeave={() => clearHoveredCardId()} >
         <div style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
-          {cardNames.map(({ name, _id }) => {
-            return <div
-              key={_id} id={_id}
-              onMouseOver={() => setHoveredCardId(_id)}
-              onClick={() => setSelectedId(_id)}
-            >{name}</div>
-          })}
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {cardNames.map(({ name, _id }) => {
+              return <div
+                key={_id} id={_id}
+                onMouseOver={() => setHoveredCardId(_id)}
+                onClick={handleCardSelectClick}
+              >{name}</div>
+            })}
+          </div>
 
           {hoveredThumbUrl &&
             <img
-              onClick={() => setSelectedId(hoveredCardId)}
+              onClick={handleCardSelectClick}
               src={hoveredThumbUrl} alt="" />
           }
         </div>
@@ -48,5 +55,3 @@ function App() {
     </>
   )
 }
-
-export default App

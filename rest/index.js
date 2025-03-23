@@ -35,8 +35,17 @@ app.get('/card/:id', async (req, res) => {
 })
 
 app.get('/thumb/:id', async (req, res) => {
+  if ([undefined, null, 'undefined'].includes( req.params?.id)) {
+    res.status(404).send('no id provided');
+    return
+  }
+
   const image = await getImage(req.params.id);
-  if (!image) { res.status(404).send('image not found'); return }
+  if (!image) {
+    res.status(404).send('image not found');
+    return
+  }
+
   const { mimetype, thumb } = image
   const filename = image.filename.replace(/(.*)\.(.{3,4})/, '$1.thumb.$2')
   res.set({
@@ -51,7 +60,7 @@ app.get('/cardNames', async (req, res) => {
   const projected = result.map((card) => ({
     _id: card._id.toString(),
     name: card.name,
-    image_id: card.image._id,
+    image_id: card.image?._id,
   }))
   res.send(projected);
 })

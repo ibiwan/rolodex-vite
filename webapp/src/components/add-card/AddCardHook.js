@@ -1,8 +1,5 @@
 import { useDispatch } from 'react-redux'
-
-import {
-  refreshCardNames
-} from '../store/store.js'
+import { refreshCardNames } from '../../store';
 
 export const useAddCard = () => {
   const dispatch = useDispatch();

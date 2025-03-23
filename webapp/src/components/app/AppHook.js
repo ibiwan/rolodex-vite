@@ -6,13 +6,13 @@ import {
   clearSelectedId,
   fetchCardWithId,
   refreshCardNames,
-  selectCardNames,
   selectCardThumbs,
   selectHoveredCardId,
   selectSelectedId,
   setHoveredCardId,
   setSelectedId,
-} from '../store/store.js'
+  selectCardNames,
+} from '../../store'
 
 export const useApp = () => {
   const cardNames = useSelector(selectCardNames);
@@ -31,17 +31,23 @@ export const useApp = () => {
       }
     };
 
+    const handleClick = () => {
+      dispatch(clearSelectedId());
+    }
+
     document.body.addEventListener('keydown', handleKeyDown);
+    document.body.addEventListener('click', handleClick);
     return () => {
       document.body.removeEventListener('keydown', handleKeyDown);
+      document.body.removeEventListener('click', handleClick);
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (selectedId) {
       dispatch(fetchCardWithId(selectedId))
     }
-  }, [selectedId])
+  }, [dispatch, selectedId])
 
   return {
     cardNames,

@@ -1,6 +1,6 @@
+import { selectSelectedCard } from '../store';
 import { Box } from './Box.jsx';
 import { useSelector } from 'react-redux';
-import { selectSelectedCard } from '../store/store.js';
 
 export const Card = () => {
   const cardData = useSelector(selectSelectedCard);
@@ -12,7 +12,7 @@ export const Card = () => {
   return <>
     {cardData.image && (
       <Box>
-        <img src={imageUrl} alt="" />
+        <img style={{width:"50%"}} src={imageUrl} alt="" />
       </Box>
     )}
   </>

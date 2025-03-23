@@ -1,7 +1,7 @@
 import { Field, Form, Formik } from 'formik';
-import { makeCard } from '../services/api.js';
-import { ThreeCol } from './ThreeCol.jsx';
-import { FormItem } from './FormItem.jsx';
+import { makeCard } from '../../services/api.js';
+import { ThreeCol } from '../ThreeCol.jsx';
+import { FormItem } from '../FormItem.jsx';
 import { useAddCard } from './AddCardHook.js';
 
 const Types = {
@@ -65,6 +65,7 @@ export const AddCard = () => {
           }
           break;
         case Types.text:
+          console.log({values})
           if (values[Fields.text] === '') {
             errors[Fields.text] = 'Text Block must be provided';
           }

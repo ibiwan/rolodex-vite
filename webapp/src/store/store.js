@@ -1,34 +1,6 @@
-import { configureStore, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { getCardById, getCardNames } from '../services/api.js';
+import { configureStore, createSlice } from '@reduxjs/toolkit'
 
-export const refreshCardNames = createAsyncThunk(
-  'cards/fetchNames',
-  async (arg, thunkAPI) => {
-    const response = await getCardNames();
-    thunkAPI.dispatch(setCardNames(response));
-    response.forEach(async (r) => {
-      const imageUrl = `http://localhost:3000/thumb/${r.image_id}`;
-      fetch(imageUrl);
-      thunkAPI.dispatch(addCardThumb({ id: r._id, data: imageUrl }));
-    })
-  }
-);
-
-export const fetchCardWithId = createAsyncThunk(
-  'cards/fetchCard',
-  async (id, thunkAPI) => {
-    const data = await getCardById(id)
-    thunkAPI.dispatch(addCardData({ id, data }));
-  }
-)
-
-const initialState = {
-  cardNames: [],
-  cardData: {},
-  selectedId: null,
-  cardThumbs: {},
-  hoveredCardId: null,
-};
+import { initialState } from './state.js'
 
 const cardySlice = createSlice({
   name: 'cards',
@@ -44,7 +16,7 @@ const cardySlice = createSlice({
   }),
 })
 
-const {
+export const {
   addCardThumb,
   clearHoveredCardId,
   clearSelectedId,
@@ -54,20 +26,6 @@ const {
   setHoveredCardId,
   setSelectedId,
 } = cardySlice.actions;
-
-export {
-  clearHoveredCardId,
-  clearSelectedId,
-  fetchCardNames,
-  setHoveredCardId,
-  setSelectedId,
-}
-
-export const selectCardNames = state => state.cardNames;
-export const selectSelectedId = state => state.selectedId;
-export const selectCardThumbs = state => state.cardThumbs;
-export const selectHoveredCardId = state => state.hoveredCardId;
-export const selectSelectedCard = state => state?.cardData?.[state?.selectedId];
 
 export const store = configureStore({
   reducer: cardySlice.reducer,
